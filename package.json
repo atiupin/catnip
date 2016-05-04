@@ -1,0 +1,15 @@
+{
+  "name": "catnip",
+  "version": "0.0.1",
+  "description": "BEM-flavoured class name generator. Works great with React and CSS modules",
+  "main": "index.js",
+  "keywords": [
+    "css",
+    "bem",
+    "react",
+    "classname",
+    "css-modules"
+  ],
+  "author": "Alexander Tewpin",
+  "license": "MIT"
+}

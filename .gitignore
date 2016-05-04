@@ -1,0 +1,5 @@
+### Node ###
+*.log
+
+### OSX ###
+.DS_Store
