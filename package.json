@@ -1,6 +1,10 @@
 {
   "name": "catnip",
   "version": "0.0.1",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/alextewpin/catnip"
+  },
   "description": "BEM-flavoured class name generator. Works great with React and CSS modules",
   "main": "index.js",
   "keywords": [
