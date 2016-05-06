@@ -25,6 +25,7 @@ const className = cn(
   'button',                               // Element (string)
   { style: 'amazing', disabled: false },  // Mods (object)
   ['global-input']                        // Mixes (array)
+)
 ```
 Element defines basic class name of element.  
 Mods used for dynamic stuff, eg. styles and states.  
