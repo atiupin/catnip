@@ -67,7 +67,7 @@ cn('element', { mod: false })      // block__element block__element_mod_false
 
 If there is no such class in CSS module it will be silently ignored
 ```
-// Style css have element_mod_true, but not element
+// CSS module have element_mod_true, but not element
 cn('element', { mod: true }) // element_mod_true
 ```
 
