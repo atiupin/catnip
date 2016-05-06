@@ -1,54 +1,76 @@
 # catnip
 
-Catnip reduces boilerplate class generation code. It's still really young, so use it in production code with great cautious.
+Catnip greatly reduces boilerplate class generation code. It's still beta, so use it in production code with caution.
 
-## BEM
+## Init
+Catnip first should be initiated with string for BEM generator and styles object for CSS modules generator.
 
-Typical code to generate BEM classes
 ```
-<div className={`${block}__${element} ${block}__${element}_${mod}_${modValue}`}/>
-```
+import catnip from 'catnip';
 
-Catnip code
-```
-import { bem } from 'catnip';
-
-const cn = bem(block);
-
-<div className={cn(element, { mod })}/> // block__element block__element_mod_modValue
+const cn = catnip('block'); // Will generate strings
 ```
 
-Some more examples
 ```
-cn() // block
-cn('element') // block__element
-cn('element', { someMod: true }) // block__element block__element_some-mod_true
-```
-
-## CSS Modules
-
-Code with CSS modules, expecting we have to @include all common element CSS to each mod and each modValue
-```
+import catnip from 'catnip';
 import styles from './styles.scss';
-<div className={styles[`${element}_${mod}_${modValue}`]}/>
+
+const cn = catnip(styles); // Will generate strings and takes corresponging items from styles object
 ```
 
-Catnip code. You don't have to @include common CSS to each mod
+## Usage
+Generator function takes 3 arguments, all optional
+```
+const className = cn(
+  'button',                               // Element (string)
+  { style: 'amazing', disabled: false },  // Mods (object)
+  ['global-input']                        // Mixes (array)
+```
+Element defines basic class name of element.  
+Mods used for dynamic stuff, eg. styles and states.  
+Mixes are just global styles which will be added to final class.
+
+## Examples
+Catnip uses BEM synax for generating classes
+```
+cn()                          // block
+cn('element')                 // block__element
+cn('element', { mod: true })  // block__element block__element_mod_true
+cn('element', ['mix'])        // block__element mix
+```
+
+CCS modules works in the same way but don't need block
 ```
 import { cssm } from 'catnip';
 import styles from './styles.scss';
 
 const cn = cssm(styles);
 
-<div className={cn(element, { mod })}/> // styles[element] + styles[element__mod_modValue]
+cn(element, { mod }) // styles[element] + styles[element__mod_modValue]
 ```
 
-## Notes
-- Mod names will be converted to snake case
-- Mods with null and undefined values will be ignored
-- Default element for CSS modules is 'root'
-- If there is no such class in CSS module it will be silently ignored
+Catnip automatically converts camel case to snake case in mod names, so it works great with JS object shorthand
+```
+const someMod = true;
+cn('element', { someMod }) // block__element block__element_some-mod_true
+```
 
-## To Do
-- Options
-- Mixes
+Mods with null and undefined (but not false) values will be ignored
+```
+cn('element', { mod: undefined })  // block__element
+cn('element', { mod: null })       // block__element
+cn('element', { mod: false })      // block__element block__element_mod_false
+```
+
+## CSS Modules Notes
+
+If there is no such class in CSS module it will be silently ignored
+```
+// Style css have element_mod_true, but not element
+cn('element', { mod: true }) // element_mod_true
+```
+
+Default element for CSS modules generator is `root`
+```
+cn({ mod: true }) // root root_mod_true
+```

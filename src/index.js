@@ -8,64 +8,58 @@ function getMods(mods) {
     .map(mod => `${snake(mod)}_${mods[mod]}`);
 }
 
-function bem(block = '') {
-  return function cn(...args) {
-    switch (args.length) {
-      case 1: {
-        if (typeof args[0] === 'string') {
-          const element = args[0];
-          return `${block}__${element}`;
-        }
-        const mods = args[0];
-        return getMods(mods).reduce((sum, mod) => `${sum} ${block}_${mod}`, block);
-      }
-      case 2: {
-        const element = args[0];
-        const mods = args[1];
-        return getMods(mods).reduce((sum, mod) =>
-          `${sum} ${block}__${element}_${mod}`, `${block}__${element}`);
-      }
-      default:
-        return block;
-    }
-  };
+function getMixes(mixes) {
+  return mixes
+    .filter(mix => mix)
+    .map(mix => ` ${mix}`)
+    .join('');
 }
 
-function reduceMods(styles, element, mods) {
-  const elementClass = styles[element] || '';
-  return getMods(mods).reduce((sum, mod) => {
-    const className = `${element}_${mod}`;
-    if (sum === '') {
-      return styles[className];
+function getArgs(args) {
+  const out = {};
+  args.forEach(arg => {
+    if (typeof arg === 'string') {
+      out.element = arg;
+      return;
     }
-    return `${sum} ${styles[className]}`;
-  }, elementClass);
+    if (Array.isArray(arg)) {
+      out.mixes = getMixes(arg);
+      return;
+    }
+    if (typeof arg === 'object') {
+      out.mods = getMods(arg);
+      return;
+    }
+  });
+  return out;
+}
+
+function bem(block = '') {
+  return function cn(...args) {
+    const { element = '', mixes = [], mods = [] } = getArgs(args);
+    const namespace = element === '' ? block : (`${block}__${element}`);
+    return mods.reduce((sum, mod) =>
+      `${sum} ${namespace}_${mod}`, namespace).concat(mixes);
+  };
 }
 
 function cssm(styles = {}) {
   return function cn(...args) {
-    switch (args.length) {
-      case 1: {
-        if (typeof args[0] === 'string') {
-          const element = args[0];
-          return styles[element];
-        }
-        const mods = args[0];
-        const element = 'root';
-        return reduceMods(styles, element, mods);
+    const { element = 'root', mixes = [], mods = [] } = getArgs(args);
+    const namespace = styles[element] || '';
+    return mods.reduce((sum, mod) => {
+      const className = `${element}_${mod}`;
+      if (sum === '') {
+        return styles[className];
       }
-      case 2: {
-        const element = args[0];
-        const mods = args[1];
-        return reduceMods(styles, element, mods);
-      }
-      default:
-        return styles.root || '';
-    }
+      return `${sum} ${styles[className]}`;
+    }, namespace).concat(mixes);
   };
 }
 
-module.exports = {
-  bem,
-  cssm,
+module.exports = function catnip(initializer) {
+  if (typeof initializer === 'object') {
+    return cssm(initializer);
+  }
+  return bem(initializer);
 };

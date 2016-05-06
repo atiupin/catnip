@@ -1,7 +1,6 @@
 const expect = require('chai').expect;
 
-const bem = require('../lib/index.js').bem;
-const cssm = require('../lib/index.js').cssm;
+const catnip = require('../lib/index.js');
 
 const styles = {
   root: 'block__root',
@@ -31,33 +30,36 @@ function common(cn) {
     expect(cn('element', { mod: null })).to.equal('block__element');
     expect(cn('element', { mod: false })).to.equal('block__element block__element_mod_false');
   });
+  it('cn mixes array in arguments into class name', () => {
+    expect(cn('element', ['mixed', 'more'])).to.equal('block__element mixed more');
+  });
+  it('cn skips not truthy mixes', () => {
+    expect(cn('element', [''])).to.equal('block__element');
+    expect(cn('element', [undefined])).to.equal('block__element');
+    expect(cn('element', [null])).to.equal('block__element');
+    expect(cn('element', [false])).to.equal('block__element');
+  });
 }
 
 describe('BEM', () => {
-  it('is exported', () => {
-    expect(typeof bem).to.equal('function');
-  });
   it('cn default block is empty string', () => {
-    const cn = bem();
+    const cn = catnip();
     expect(cn()).to.equal('');
   });
   it('cn returns block on call', () => {
-    const cn = bem('block');
+    const cn = catnip('block');
     expect(cn()).to.equal('block');
   });
   it('cn returns block block_modName_modValue on call without element and with mods', () => {
-    const cn = bem('block');
+    const cn = catnip('block');
     expect(cn({ modName: 'mod-value', anotherMod: 'another-value' })).to.equal(
       'block block_mod-name_mod-value block_another-mod_another-value');
   });
-  common(bem('block'));
+  common(catnip('block'));
 });
 
 describe('CSS Modules', () => {
-  const cn = cssm(styles);
-  it('is exported', () => {
-    expect(typeof cssm).to.equal('function');
-  });
+  const cn = catnip(styles);
   it('cn default element is root', () => {
     expect(cn()).to.equal('block__root');
   });
@@ -69,5 +71,5 @@ describe('CSS Modules', () => {
     expect(cn('element-no-base', { modName: 'mod-value' })).to.equal(
       'block__element-no-base_mod-name_mod-value');
   });
-  common(cssm(styles));
+  common(catnip(styles));
 });
