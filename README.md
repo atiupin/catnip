@@ -42,12 +42,12 @@ cn('element', ['mix'])        // block__element mix
 
 CCS modules works in the same way but don't need block
 ```
-import { cssm } from 'catnip';
+import catnip from 'catnip';
 import styles from './styles.scss';
 
 const cn = cssm(styles);
 
-cn(element, { mod }) // styles[element] + styles[element__mod_modValue]
+cn(element, { mod }) // styles[element] + styles[element_mod_modValue]
 ```
 
 Catnip automatically converts camel case to snake case in mod names, so it works great with JS object shorthand

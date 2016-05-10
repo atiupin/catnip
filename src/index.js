@@ -26,7 +26,7 @@ function getArgs(args) {
       out.mixes = getMixes(arg);
       return;
     }
-    if (typeof arg === 'object') {
+    if (typeof arg === 'object' && arg !== null) {
       out.mods = getMods(arg);
       return;
     }

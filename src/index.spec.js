@@ -14,7 +14,7 @@ const styles = {
 };
 
 function common(cn) {
-  it('cn is function', () => {
+  it('cn is a function', () => {
     expect(typeof cn).to.equal('function');
   });
   it('cn returns block__element on call with element', () => {
@@ -39,9 +39,23 @@ function common(cn) {
     expect(cn('element', [null])).to.equal('block__element');
     expect(cn('element', [false])).to.equal('block__element');
   });
+  it('cn works correctly on null arguments', () => {
+    expect(cn('element', null)).to.equal('block__element');
+  });
+  it('cn works overwrite multiple arguments of same type', () => {
+    expect(cn('...', 'element', { foo: 'bar' }, { modName: 'mod-value' }, ['...'], ['mix']))
+      .to.equal('block__element block__element_mod-name_mod-value mix');
+  });
 }
 
+describe('Catnip', () => {
+  it('exports function', () => {
+    expect(typeof catnip).to.equal('function');
+  });
+});
+
 describe('BEM', () => {
+  common(catnip('block'));
   it('cn default block is empty string', () => {
     const cn = catnip();
     expect(cn()).to.equal('');
@@ -55,11 +69,11 @@ describe('BEM', () => {
     expect(cn({ modName: 'mod-value', anotherMod: 'another-value' })).to.equal(
       'block block_mod-name_mod-value block_another-mod_another-value');
   });
-  common(catnip('block'));
 });
 
 describe('CSS Modules', () => {
   const cn = catnip(styles);
+  common(catnip(styles));
   it('cn default element is root', () => {
     expect(cn()).to.equal('block__root');
   });
@@ -71,5 +85,4 @@ describe('CSS Modules', () => {
     expect(cn('element-no-base', { modName: 'mod-value' })).to.equal(
       'block__element-no-base_mod-name_mod-value');
   });
-  common(catnip(styles));
 });
