@@ -85,4 +85,12 @@ describe('CSS Modules', () => {
     expect(cn('element-no-base', { modName: 'mod-value' })).to.equal(
       'block__element-no-base_mod-name_mod-value');
   });
+  it('cn skips mods if there are undefinded', () => {
+    expect(cn('element', { modName: 'not-exist' })).to.equal(
+      'block__element');
+  });
+  it('cn works correctly without mods or element at all', () => {
+    expect(cn('element-not-exist', { modName: 'not-exist' })).to.equal(
+      '');
+  });
 });

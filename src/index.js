@@ -48,12 +48,13 @@ function cssm(styles = {}) {
     const { element = 'root', mixes = [], mods = [] } = getArgs(args);
     const namespace = styles[element] || '';
     return mods.reduce((sum, mod) => {
-      const className = `${element}_${mod}`;
+      const modClassName = `${element}_${mod}`;
       if (sum === '') {
-        return styles[className];
+        return styles[modClassName] || '';
       }
-      return `${sum} ${styles[className]}`;
-    }, namespace).concat(mixes);
+      const modStyle = styles[modClassName] || '';
+      return `${sum} ${modStyle}`;
+    }, namespace).trim().concat(mixes);
   };
 }
 
