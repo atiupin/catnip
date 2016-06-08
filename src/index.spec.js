@@ -58,7 +58,7 @@ describe('BEM', () => {
   common(catnip('block'));
   it('cn default block is empty string', () => {
     const cn = catnip();
-    expect(cn()).to.equal('');
+    expect(cn('element')).to.equal('__element');
   });
   it('cn returns block on call', () => {
     const cn = catnip('block');
@@ -68,6 +68,10 @@ describe('BEM', () => {
     const cn = catnip('block');
     expect(cn({ modName: 'mod-value', anotherMod: 'another-value' })).to.equal(
       'block block_mod-name_mod-value block_another-mod_another-value');
+  });
+  it('cn returns null if result is empty', () => {
+    const cn = catnip('');
+    expect(cn('')).to.equal(null);
   });
 });
 
@@ -90,7 +94,9 @@ describe('CSS Modules', () => {
       'block__element');
   });
   it('cn works correctly without mods or element at all', () => {
-    expect(cn('element-not-exist', { modName: 'not-exist' })).to.equal(
-      '');
+    expect(cn('element-not-exist', { modName: 'not-exist' })).to.equal(null);
+  });
+  it('cn returns null if result is empty', () => {
+    expect(cn('')).to.equal(null);
   });
 });

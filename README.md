@@ -63,6 +63,16 @@ cn('element', { mod: null })       // block__element
 cn('element', { mod: false })      // block__element block__element_mod_false
 ```
 
+If result is empty string, `null` will be returned instead, so React will not create unnecessary class attribute.
+```
+const cn = catnip('');
+cn('') // null
+```
+```
+const cn = catnip(styles);
+cn('not-exists')  // null
+```
+
 ## CSS Modules Notes
 
 If there is no such class in CSS module it will be silently ignored

@@ -38,8 +38,9 @@ function bem(block = '') {
   return function cn(...args) {
     const { element = '', mixes = [], mods = [] } = getArgs(args);
     const namespace = element === '' ? block : (`${block}__${element}`);
-    return mods.reduce((sum, mod) =>
+    const result = mods.reduce((sum, mod) =>
       `${sum} ${namespace}_${mod}`, namespace).concat(mixes);
+    return result === '' ? null : result;
   };
 }
 
@@ -47,7 +48,7 @@ function cssm(styles = {}) {
   return function cn(...args) {
     const { element = 'root', mixes = [], mods = [] } = getArgs(args);
     const namespace = styles[element] || '';
-    return mods.reduce((sum, mod) => {
+    const result = mods.reduce((sum, mod) => {
       const modClassName = `${element}_${mod}`;
       if (sum === '') {
         return styles[modClassName] || '';
@@ -55,6 +56,7 @@ function cssm(styles = {}) {
       const modStyle = styles[modClassName] || '';
       return `${sum} ${modStyle}`;
     }, namespace).trim().concat(mixes);
+    return result === '' ? null : result;
   };
 }
 
