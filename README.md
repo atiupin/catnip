@@ -32,7 +32,7 @@ Mods used for dynamic stuff, eg. styles and states.
 Mixes are just global styles which will be added to final class.
 
 ## Examples
-Catnip uses BEM synax for generating classes
+Catnip uses BEM-like syntax for generating classes
 ```
 cn()                          // block
 cn('element')                 // block__element
@@ -40,14 +40,22 @@ cn('element', { mod: true })  // block__element block__element_mod_true
 cn('element', ['mix'])        // block__element mix
 ```
 
-CCS modules works in the same way but don't need block
+CCS modules works in the similar way but don't need block
 ```
 import catnip from 'catnip';
 import styles from './styles.scss';
 
-const cn = cssm(styles);
+const cn = catnip(styles);
 
-cn(element, { mod }) // styles[element] + styles[element_mod_modValue]
+function someComonent ({ mod }) {
+  return (
+    <div className={cn('element', { mod })}>
+      Hi there!
+    </div>
+  );
+}
+
+// Adds styles[element] and styles[element_mod_modValue]
 ```
 
 Catnip automatically converts camel case to snake case in mod names, so it works great with JS object shorthand
